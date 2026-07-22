@@ -1,7 +1,6 @@
 <script>
 	import Nav from '$lib/components/Nav.svelte';
 	import Hero from '$lib/components/Hero.svelte';
-	import Stack from '$lib/components/Stack.svelte';
 	import Work from '$lib/components/Work.svelte';
 	import About from '$lib/components/About.svelte';
 	import Footer from '$lib/components/Footer.svelte';
