@@ -140,9 +140,11 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		gap: clamp(2.5rem, 6vw, 5rem);
+		/* Tied to vh, not just vw, so the whole hero — copy, panel, scroll cue —
+		   comfortably fits one screen on short/laptop viewports, not just narrow ones. */
+		gap: clamp(1.25rem, 3vh, 2.25rem);
 		min-height: calc(100svh - var(--nav-h));
-		padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 4vw, 3rem);
+		padding-block: clamp(1.25rem, 3.5vh, 2.5rem) clamp(1rem, 2.5vh, 1.75rem);
 		overflow: clip;
 	}
 
@@ -183,8 +185,9 @@
 	}
 
 	.hero-title {
-		font-size: var(--step-6);
-		margin: 1.6rem 0 1.9rem;
+		/* vw + vh so it shrinks on short screens, not just narrow ones. */
+		font-size: clamp(2.1rem, 3vw + 3vh, 4.75rem);
+		margin: clamp(0.75rem, 1.8vh, 1.25rem) 0 clamp(0.85rem, 1.8vh, 1.4rem);
 	}
 
 	/* ---------- Terminal line ---------- */
@@ -192,8 +195,8 @@
 		font-family: var(--font-mono);
 		font-size: var(--step-0);
 		color: var(--text-muted);
-		margin-bottom: 1.8rem;
-		min-height: 1.7em;
+		margin-bottom: clamp(0.85rem, 1.8vh, 1.5rem);
+		min-height: 1.6em;
 	}
 
 	.role-line .prompt {
@@ -225,7 +228,7 @@
 	.bio {
 		max-width: 48ch;
 		color: var(--text-muted);
-		margin-bottom: 2.4rem;
+		margin-bottom: clamp(1rem, 2.2vh, 1.8rem);
 		text-wrap: pretty;
 	}
 
@@ -238,7 +241,7 @@
 	/* ---------- Status panel ---------- */
 	.panel {
 		position: relative;
-		padding: 1.9rem;
+		padding: clamp(1.25rem, 2.4vh, 1.75rem);
 		border: 1px solid var(--border);
 		border-radius: var(--radius-lg);
 		background: color-mix(in srgb, var(--bg-elevated) 78%, transparent);
@@ -281,7 +284,7 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
-		padding-bottom: 1.3rem;
+		padding-bottom: clamp(0.85rem, 1.6vh, 1.2rem);
 		border-bottom: 1px solid var(--border);
 	}
 
@@ -332,7 +335,7 @@
 	.panel-list li {
 		display: flex;
 		gap: 0.9rem;
-		padding: 1.15rem 0;
+		padding: clamp(0.7rem, 1.4vh, 1.15rem) 0;
 		border-bottom: 1px solid var(--border);
 	}
 
@@ -356,7 +359,7 @@
 	}
 
 	.panel-foot {
-		padding-top: 1.3rem;
+		padding-top: clamp(0.85rem, 1.6vh, 1.2rem);
 		font-family: var(--font-mono);
 		font-size: var(--step--2);
 		color: var(--text-dim);
@@ -370,7 +373,7 @@
 		justify-content: space-between;
 		gap: 1.5rem;
 		flex-wrap: wrap;
-		padding-top: 1.5rem;
+		padding-top: clamp(0.85rem, 1.6vh, 1.25rem);
 		border-top: 1px solid var(--border);
 	}
 
