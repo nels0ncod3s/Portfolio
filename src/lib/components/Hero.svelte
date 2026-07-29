@@ -1,6 +1,10 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import { reveal } from '$lib/actions/reveal.js';
+	import { magnetic } from '$lib/actions/magnetic.js';
+	import { spotlight } from '$lib/actions/spotlight.js';
+	import { clock, subscribeClock } from '$lib/state/clock.svelte.js';
+	import { site } from '$lib/data/site.js';
+	import { projects } from '$lib/data/projects.js';
 
 	const roles = [
 		'Software engineer.',
@@ -9,13 +13,16 @@
 		'Shipping for Nigeria.'
 	];
 
+	// Whatever is flagged `active` in the project list is what he's building now.
+	const building = projects.filter((project) => project.active);
+
 	let role = $state('');
 	let typingTimeout;
 
-	onMount(() => {
-		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	onMount(subscribeClock);
 
-		if (reduceMotion) {
+	onMount(() => {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			role = roles[0];
 			return;
 		}
@@ -33,7 +40,7 @@
 
 				if (charIndex === current.length) {
 					deleting = true;
-					typingTimeout = setTimeout(tick, 1500);
+					typingTimeout = setTimeout(tick, 1600);
 					return;
 				}
 			} else {
@@ -46,118 +53,162 @@
 				}
 			}
 
-			typingTimeout = setTimeout(tick, deleting ? 30 : 55);
+			typingTimeout = setTimeout(tick, deleting ? 28 : 55);
 		}
 
-		tick();
+		// Wait out the intro curtain so the first character lands with the headline.
+		typingTimeout = setTimeout(tick, 1400);
 	});
 
-	onDestroy(() => {
-		if (typingTimeout) clearTimeout(typingTimeout);
-	});
+	onDestroy(() => clearTimeout(typingTimeout));
 </script>
 
 <section class="hero" id="top">
+	<div class="hero-aura" aria-hidden="true"></div>
+
 	<div class="wrap hero-grid">
 		<div class="hero-copy">
-			<p class="eyebrow">Software Engineer — Lagos, Nigeria</p>
+			<p class="eyebrow fade-up" style="--i:0">{site.role} — {site.location}</p>
 
-			<h1>
-				Building products that <em>ship</em>, not just demo.
+			<h1 class="display hero-title">
+				<span class="line" style="--i:1"><span>Building products</span></span>
+				<span class="line" style="--i:2"><span>that <em>ship</em>,</span></span>
+				<span class="line" style="--i:3"><span>not just demo.</span></span>
 			</h1>
 
-			<p class="role-line">
-				<span class="prompt">&gt;</span>
-				{role}<span class="cursor"></span>
+			<!-- Decorative: the roles it types through are all stated elsewhere on the
+			     page, and a half-typed word is noise for a screen reader. -->
+			<p class="role-line fade-up" style="--i:4" aria-hidden="true">
+				<span class="prompt">&gt;</span>{role}<span class="cursor-blink"></span>
 			</p>
 
-			<p class="bio">
+			<p class="bio fade-up" style="--i:5">
 				I design and build fintech and developer tools for African markets — with a soft spot for
 				prediction markets, payment infrastructure, and anything that gets out of the browser and
 				into people's hands.
 			</p>
 
-			<div class="hero-ctas">
-				<a href="#work" class="btn btn-primary">See the work</a>
+			<div class="hero-ctas fade-up" style="--i:6">
+				<a href="#work" class="btn btn-primary" use:magnetic>
+					See the work <span class="arrow">→</span>
+				</a>
 				<a
 					href="https://github.com/nels0ncod3s"
 					target="_blank"
 					rel="noopener"
-					class="btn btn-ghost">GitHub ↗</a
+					class="btn btn-ghost"
+					use:magnetic
 				>
+					GitHub <span class="arrow">↗</span>
+				</a>
 			</div>
 		</div>
 
-		<aside class="building-card reveal" use:reveal>
-			<p class="building-label">Currently building</p>
-			<ul class="building-list">
-				<li>
-					<span class="dot"></span>
-					<div>
-						<p class="name">Polyclone</p>
-						<p class="desc">micro prediction markets</p>
-					</div>
-				</li>
-				<li>
-					<span class="dot"></span>
-					<div>
-						<p class="name">Wharf</p>
-						<p class="desc">webhook debugging dashboard</p>
-					</div>
-				</li>
+		<aside class="panel fade-up" style="--i:5" use:spotlight>
+			<div class="panel-head">
+				<span class="panel-label"><span class="dot"></span> Currently building</span>
+				<span class="panel-count">{String(building.length).padStart(2, '0')}</span>
+			</div>
+
+			<ul class="panel-list">
+				{#each building as project}
+					<li>
+						<span class="panel-index">{project.index}</span>
+						<div>
+							<p class="panel-name">{project.title}</p>
+							<p class="panel-desc">{project.domain}</p>
+						</div>
+					</li>
+				{/each}
 			</ul>
-			<p class="building-footnote">go1.22 — still learning, still shipping</p>
+
+			<p class="panel-foot">go1.22 — still learning, still shipping</p>
 		</aside>
+	</div>
+
+	<div class="wrap hero-foot fade-up" style="--i:8">
+		<a href="#work" class="scroll-cue" aria-label="Scroll to selected work">
+			<span class="mono">Scroll</span>
+			<span class="scroll-track"><span class="scroll-thumb"></span></span>
+		</a>
+		<p class="mono hero-clock">{site.location} — {clock.time} WAT</p>
 	</div>
 </section>
 
 <style>
 	.hero {
-		padding: 6rem 0 4.5rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: clamp(2.5rem, 6vw, 5rem);
+		min-height: calc(100svh - var(--nav-h));
+		padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 4vw, 3rem);
+		overflow: clip;
+	}
+
+	/* Two soft accent lights bleeding in from the edges. */
+	.hero-aura {
+		position: absolute;
+		inset: -20% -10% auto -10%;
+		height: 120%;
+		pointer-events: none;
+		background:
+			radial-gradient(
+				38rem 28rem at 78% 18%,
+				color-mix(in srgb, var(--accent) calc(var(--glow) * 100%), transparent),
+				transparent 70%
+			),
+			radial-gradient(
+				30rem 24rem at 8% 72%,
+				color-mix(in srgb, var(--accent-2) calc(var(--glow) * 60%), transparent),
+				transparent 72%
+			);
+		filter: blur(28px);
+		opacity: 0;
+		animation: auraIn 1.8s var(--ease) calc(var(--intro) - 0.3s) forwards;
+	}
+
+	@keyframes auraIn {
+		to {
+			opacity: 1;
+		}
 	}
 
 	.hero-grid {
+		position: relative;
 		display: grid;
-		grid-template-columns: 1.15fr 0.85fr;
-		gap: 4rem;
+		grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+		gap: clamp(2.5rem, 5vw, 4.5rem);
 		align-items: center;
 	}
 
-	.hero h1 {
-		font-family: var(--font-display);
-		font-size: clamp(2.4rem, 5vw, 3.8rem);
-		font-weight: 600;
-		line-height: 1.08;
-		letter-spacing: -0.01em;
-		margin-bottom: 1.4rem;
+	.hero-title {
+		font-size: var(--step-6);
+		margin: 1.6rem 0 1.9rem;
 	}
 
-	.hero h1 em {
-		font-style: italic;
-		color: var(--accent);
-	}
-
+	/* ---------- Terminal line ---------- */
 	.role-line {
 		font-family: var(--font-mono);
-		font-size: 1.02rem;
+		font-size: var(--step-0);
 		color: var(--text-muted);
-		margin-bottom: 1.7rem;
-		min-height: 1.6em;
+		margin-bottom: 1.8rem;
+		min-height: 1.7em;
 	}
 
 	.role-line .prompt {
 		color: var(--accent-2);
-		margin-right: 0.3em;
+		margin-right: 0.45em;
 	}
 
-	.role-line .cursor {
+	.cursor-blink {
 		display: inline-block;
 		width: 0.5em;
-		height: 1em;
-		background: var(--text-muted);
+		height: 1.05em;
 		margin-left: 2px;
 		vertical-align: text-bottom;
-		animation: blink 1s steps(1) infinite;
+		background: var(--accent);
+		animation: blink 1.05s steps(1) infinite;
 	}
 
 	@keyframes blink {
@@ -172,10 +223,10 @@
 	}
 
 	.bio {
-		max-width: 46ch;
+		max-width: 48ch;
 		color: var(--text-muted);
-		margin-bottom: 2.2rem;
-		font-size: 1.03rem;
+		margin-bottom: 2.4rem;
+		text-wrap: pretty;
 	}
 
 	.hero-ctas {
@@ -184,92 +235,208 @@
 		flex-wrap: wrap;
 	}
 
-	.building-card {
-		background: var(--bg-elevated);
+	/* ---------- Status panel ---------- */
+	.panel {
+		position: relative;
+		padding: 1.9rem;
 		border: 1px solid var(--border);
 		border-radius: var(--radius-lg);
-		padding: 1.8rem;
+		background: color-mix(in srgb, var(--bg-elevated) 78%, transparent);
+		backdrop-filter: blur(14px);
 		box-shadow: var(--shadow);
+		overflow: hidden;
 	}
 
-	.building-label {
+	/* Gradient hairline across the top edge. */
+	.panel::before {
+		content: '';
+		position: absolute;
+		inset: 0 0 auto 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+		opacity: 0.7;
+	}
+
+	/* Light that follows the cursor across the card. */
+	.panel::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background: radial-gradient(
+			16rem 16rem at var(--spot-x, 50%) var(--spot-y, 0%),
+			var(--accent-soft),
+			transparent 70%
+		);
+		opacity: 0;
+		transition: opacity 0.4s ease;
+	}
+
+	.panel:hover::after {
+		opacity: 1;
+	}
+
+	.panel-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-bottom: 1.3rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.panel-label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
 		font-family: var(--font-mono);
-		font-size: 0.72rem;
-		letter-spacing: 0.1em;
+		font-size: var(--step--2);
+		letter-spacing: 0.12em;
 		text-transform: uppercase;
 		color: var(--text-dim);
-		margin-bottom: 1.2rem;
 	}
 
-	.building-list {
-		list-style: none;
-		display: flex;
-		flex-direction: column;
-		gap: 1.1rem;
+	.panel-count {
+		font-family: var(--font-mono);
+		font-size: var(--step--2);
+		color: var(--accent);
 	}
 
-	.building-list li {
-		display: flex;
-		align-items: flex-start;
-		gap: 0.8rem;
-	}
-
-	.building-list .dot {
-		width: 7px;
-		height: 7px;
+	.dot {
+		width: 6px;
+		height: 6px;
 		border-radius: 50%;
 		background: var(--accent);
-		margin-top: 0.5rem;
-		flex-shrink: 0;
 		box-shadow: 0 0 0 0 var(--accent-soft);
-		animation: pulseDot 1.8s ease-out infinite;
+		animation: pulseDot 2s ease-out infinite;
 	}
 
 	@keyframes pulseDot {
 		0% {
-			box-shadow: 0 0 0 0 var(--accent-soft);
+			box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
 		}
 		70% {
-			box-shadow: 0 0 0 8px transparent;
+			box-shadow: 0 0 0 9px transparent;
 		}
 		100% {
 			box-shadow: 0 0 0 0 transparent;
 		}
 	}
 
-	.building-list .name {
+	.panel-list {
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.panel-list li {
+		display: flex;
+		gap: 0.9rem;
+		padding: 1.15rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.panel-index {
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
+		color: var(--text-dim);
+		padding-top: 0.42rem;
+	}
+
+	.panel-name {
 		font-family: var(--font-display);
 		font-weight: 600;
-		font-size: 1.05rem;
+		font-size: var(--step-1);
+		line-height: 1.2;
 	}
 
-	.building-list .desc {
+	.panel-desc {
+		font-size: var(--step--1);
 		color: var(--text-muted);
-		font-size: 0.9rem;
 	}
 
-	.building-footnote {
-		margin-top: 1.6rem;
-		padding-top: 1.2rem;
-		border-top: 1px solid var(--border);
+	.panel-foot {
+		padding-top: 1.3rem;
 		font-family: var(--font-mono);
-		font-size: 0.78rem;
+		font-size: var(--step--2);
 		color: var(--text-dim);
+	}
+
+	/* ---------- Footer row ---------- */
+	.hero-foot {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border);
+	}
+
+	.scroll-cue {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.8rem;
+		color: var(--text-dim);
+		text-decoration: none;
+		transition: color 0.25s ease;
+	}
+
+	.scroll-cue:hover {
+		color: var(--accent);
+	}
+
+	.scroll-track {
+		display: block;
+		position: relative;
+		width: 58px;
+		height: 1px;
+		background: var(--border);
+		overflow: hidden;
+	}
+
+	.scroll-thumb {
+		position: absolute;
+		inset: 0;
+		background: var(--accent);
+		transform-origin: left;
+		animation: sweep 2.2s var(--ease) infinite;
+	}
+
+	@keyframes sweep {
+		0% {
+			transform: translateX(-100%);
+		}
+		60%,
+		100% {
+			transform: translateX(100%);
+		}
+	}
+
+	.hero-clock {
+		color: var(--text-dim);
+		font-variant-numeric: tabular-nums;
 	}
 
 	@media (max-width: 900px) {
 		.hero-grid {
 			grid-template-columns: 1fr;
 		}
+
+		.hero {
+			min-height: 0;
+		}
 	}
 
 	@media (max-width: 640px) {
-		.hero {
-			padding: 3.5rem 0 3rem;
-		}
 		.hero-ctas .btn {
 			flex: 1 1 auto;
 			justify-content: center;
+		}
+
+		.hero-clock {
+			display: none;
 		}
 	}
 </style>
