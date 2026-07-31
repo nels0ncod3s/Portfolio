@@ -52,9 +52,9 @@
 				<p class="lead">
 					I'm a <strong>Computer Science student at the University of Lagos</strong> and an
 					early-stage solo developer. Most of my time goes into building products for Nigerian and
-					African markets — right now that means <strong>Polyclone</strong>, a micro
-					prediction-market platform, and <strong>Wharf</strong>, a debugging dashboard for payment
-					webhooks.
+					African markets — right now that means <strong>First Layer</strong>, a
+					developer-first authentication service, and <strong>Buy Me Zobo</strong>, a
+					micro-tipping platform for African creators.
 				</p>
 				<p>
 					I care about <strong>fintech and developer tools</strong> — anything that makes money move

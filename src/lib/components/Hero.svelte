@@ -8,7 +8,7 @@
 
 	const roles = [
 		'Software engineer.',
-		'Building Polyclone.',
+		'Building First Layer.',
 		'Learning Go.',
 		'Shipping for Nigeria.'
 	];

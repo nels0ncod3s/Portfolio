@@ -7,7 +7,7 @@ export const marquee = [
 	'React Native',
 	'Node.js',
 	'Tailwind CSS',
-	'SQLite',
+	'PostgreSQL',
 	'Figma',
 	'Git'
 ];
@@ -32,6 +32,6 @@ export const groups = [
 	{
 		index: '03',
 		label: 'Tooling',
-		items: [{ name: 'Git' }, { name: 'SQLite' }, { name: 'Figma' }]
+		items: [{ name: 'Git' }, { name: 'PostgreSQL' }, { name: 'Figma' }]
 	}
 ];

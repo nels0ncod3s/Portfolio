@@ -1,32 +1,31 @@
 export const projects = [
 	{
 		index: '01',
-		title: 'Polyclone',
-		domain: 'Prediction markets',
-		tech: ['CSS', 'JavaScript'],
+		title: 'First Layer',
+		domain: 'Auth infrastructure',
+		tech: ['Svelte', 'Node.js', 'PostgreSQL'],
 		description:
-			'Polymarket, but for friends. A lightweight engine for wagering on outcomes with people you actually know.',
-		repo: 'https://github.com/nels0ncod3s/polyclone',
+			'Simple, developer-first authentication service — an easy Auth0 alternative setup in under 5 minutes.',
+		repo: 'https://github.com/nels0ncod3s/Auth',
 		active: true
 	},
 	{
 		index: '02',
-		title: 'Wharf',
-		domain: 'Fintech tooling',
-		tech: ['Svelte'],
+		title: 'Buy Me Zobo',
+		domain: 'Creator tools',
+		tech: ['Svelte', 'Tailwind CSS'],
 		description:
-			'A debugging dashboard for payment webhooks — inspect signatures, payloads and headers from Paystack, Flutterwave and Bachs.io, then redispatch events to reproduce bugs.',
-		repo: 'https://github.com/nels0ncod3s/Wharf',
+			'An African-tailored micro-tipping platform enabling creators to accept support seamlessly (Buy Me a Coffee alternative).',
+		repo: 'https://github.com/nels0ncod3s/Buy-me-zobo',
 		active: true
 	},
 	{
 		index: '03',
-		title: 'Mockless',
-		domain: 'Developer tools',
-		tech: ['JavaScript'],
-		description:
-			'Instant API mocks for frontend developers who are tired of waiting on a backend that isn’t ready yet.',
-		repo: 'https://github.com/nels0ncod3s/Mockless'
+		title: 'Tix',
+		domain: 'Events',
+		tech: ['Svelte'],
+		description: 'A modern event ticketing and management web application.',
+		repo: 'https://github.com/nels0ncod3s/Tix'
 	},
 	{
 		index: '04',
@@ -34,25 +33,34 @@ export const projects = [
 		domain: 'Mobile',
 		tech: ['Expo', 'React Native'],
 		description:
-			'A location-based photo journal — snap a photo, drop a pin, watch your day unfold on a map.',
+			'A React Native mobile memory journal — snap moments, write quick thoughts, and store memories on the go.',
 		repo: 'https://github.com/nels0ncod3s/Drift'
 	},
 	{
 		index: '05',
-		title: 'chowTok',
-		domain: 'Mobile / Social',
-		tech: ['JavaScript'],
+		title: 'Mockless',
+		domain: 'Developer tools',
+		tech: ['React'],
 		description:
-			'Discover, share and review local meals — a social feed for food-obsessed neighborhoods.',
-		repo: 'https://github.com/nels0ncod3s/chowTok'
+			'Instant mock API generator allowing frontend developers to build and test UI without waiting for backends.',
+		repo: 'https://github.com/nels0ncod3s/Mockless'
 	},
 	{
 		index: '06',
-		title: 'audio-transcribe',
-		domain: 'Chrome extension',
-		tech: ['JavaScript'],
+		title: 'Resume Builder',
+		domain: 'Career tools',
+		tech: ['React'],
 		description:
-			'A Chrome extension that transcribes meeting audio straight into a downloadable PDF.',
-		repo: 'https://github.com/nels0ncod3s/audio-transcribe'
+			'An interactive resume generator and ATS optimizer designed to format and polish job applications.',
+		repo: 'https://github.com/nels0ncod3s/Resume-Builder'
+	},
+	{
+		index: '07',
+		title: 'Signal Bot',
+		domain: 'Trading tools',
+		tech: ['Node.js'],
+		description:
+			'Automated market analysis bot sending quantitative BTC/USDT trade signals directly to Telegram.',
+		repo: 'https://github.com/nels0ncod3s/SignalBot'
 	}
 ];

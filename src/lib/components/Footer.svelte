@@ -65,10 +65,6 @@
 		</div>
 	</div>
 
-	<div class="wordmark" aria-hidden="true">
-		<span>{site.name}</span>
-	</div>
-
 	<div class="wrap footer-bottom">
 		<span>© {year} {site.name}</span>
 		<span class="built">Built with SvelteKit</span>
@@ -219,32 +215,6 @@
 		100% {
 			box-shadow: 0 0 0 0 transparent;
 		}
-	}
-
-	/* ---------- Wordmark ---------- */
-	.wordmark {
-		display: flex;
-		justify-content: center;
-		margin-top: clamp(3rem, 8vw, 6rem);
-		padding-inline: var(--gutter);
-		line-height: 0.8;
-		user-select: none;
-		pointer-events: none;
-	}
-
-	.wordmark span {
-		font-family: var(--font-display);
-		font-weight: 700;
-		font-style: italic;
-		font-size: clamp(3.5rem, 15vw, 13rem);
-		letter-spacing: -0.05em;
-		white-space: nowrap;
-		color: transparent;
-		-webkit-text-stroke: 1px var(--border);
-		background: var(--accent-grad);
-		-webkit-background-clip: text;
-		background-clip: text;
-		opacity: 0.16;
 	}
 
 	/* ---------- Bottom bar ---------- */
